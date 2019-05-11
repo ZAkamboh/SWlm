@@ -1,19 +1,22 @@
 //Core Modules
 const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-//Custom Modules
-const adminRoutes = require('./routes/admin');
-const vendorRoutes = require('./routes/vendors');
+const exphbs=require("express-handlebars");
 
-const app = express();
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
+//layout
+app.engine('handlebars',exphbs({defaultLayout:"home"}));
+app.set('view engine','handlebars');
 
+//Custom Modules
+const homeRoutes = require('./routes/home');
 
-app.use(adminRoutes);
-app.use(vendorRoutes);
+app.use(homeRoutes);
+
 
 
 app.use((request, res, next) => {
@@ -21,4 +24,6 @@ app.use((request, res, next) => {
 });
 
 //Server
-app.listen(3000);
+app.listen(3000,()=>{
+    console.log("server listen to on port 3000")
+});
